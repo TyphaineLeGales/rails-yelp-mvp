@@ -9,14 +9,17 @@ class RestaurantsController < ApplicationController
   end
 
   def new
-    allowed_params = params.require(:restaurant).permit(:name, :address, :phone_number, :category)
-    @restaurant = Restaurant.new(allowed_params)
+    @restaurant = Restaurant.new
   end
 
   def create
     allowed_params = params.require(:restaurant).permit(:name, :address, :phone_number, :category)
-    @restaurant = Restaurant.create!(allowed_params)
-    redirect_to restaurant_path
+    @restaurant = Restaurant.new(allowed_params)
+    if @restaurant.save
+      redirect_to restaurant_path(@restaurant)
+    else
+      render :new
+    end
   end
 
   # private
